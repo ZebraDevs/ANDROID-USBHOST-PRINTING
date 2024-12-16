@@ -1,28 +1,19 @@
 package com.zebra.usbhostprinting;
 
-import static android.widget.Toast.makeText;
-
 import com.zebra.sdk.comm.*;
 import com.zebra.sdk.printer.discovery.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActivityOptions;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -36,13 +27,7 @@ import java.util.*;
 import android.app.*;
 import android.content.*;
 import android.hardware.usb.*;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.*;
-
-import com.zebra.arcore.psspoc.helpers.BarcodeReceiverKt;
-
-import java.util.Objects;
 
 //https://stackoverflow.com/questions/57909439/how-to-change-resolutionsize-and-density-with-android-code-runtime-getruntime
 
@@ -111,7 +96,14 @@ public class HDLauncherActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        registerReceiver(mUsbReceiver, filter);
+
+        //add if to manage receiver export behavior
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mUsbReceiver, filter, RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(mUsbReceiver, filter);
+        }
+
     }
 
     @JavascriptInterface
